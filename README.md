@@ -34,3 +34,9 @@ npm run build
 ```
 
 The test suite exercises authentication, organization isolation, product validation and CRUD, dashboard totals, and threshold settings against a separate SQLite test database.
+
+## Deploy to Render
+
+This repository includes a `render.yaml` Blueprint for a free Node web service. In Render, choose **New → Blueprint**, connect this GitHub repository, and select the Blueprint. Render builds the React app, applies Prisma migrations at startup, and generates `JWT_SECRET`. After the first successful deploy, open the service URL and create an account.
+
+The free service uses SQLite on Render's ephemeral filesystem, so database contents can be lost when the service restarts, spins down, or redeploys. This is suitable for a short demo only. For durable data, use a paid Render web service with a persistent disk mounted at `/var/data` and set `DATABASE_URL=file:/var/data/stockflow.db`, or change the Prisma provider to PostgreSQL and connect a managed Render Postgres database. Free Render Postgres databases expire after 30 days. See [Render's free service limitations](https://render.com/docs/free) and [persistent disk documentation](https://render.com/docs/disks).

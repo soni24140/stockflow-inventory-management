@@ -19,6 +19,10 @@ test('auth, tenant isolation, product CRUD, dashboard, and settings', async () =
   }
   const json = value => JSON.stringify(value);
   try {
+    const healthResponse = await fetch(base.replace(/\/api$/, '') + '/health');
+    assert.equal(healthResponse.status, 200);
+    assert.equal((await healthResponse.json()).status, 'ok');
+
     const unauthorized = await request('/products');
     assert.equal(unauthorized.response.status, 401);
 
