@@ -1,41 +1,36 @@
 # StockFlow
 
-A compact inventory management MVP built for the SDE Intern assessment. It includes single-owner organization signup and login, tenant-scoped product management, low-stock dashboard summaries, and an organization-level default threshold. The app uses Python's standard library, SQLite, and vanilla JavaScript, so it has no third-party runtime dependencies.
+Inventory management for small teams, built for the SDE Intern assessment. It includes organization signup and login, tenant-scoped product management, low-stock dashboard summaries, and configurable stock thresholds.
+
+## Stack
+
+- React 19 + Vite frontend
+- Node.js + Express 5 API
+- SQLite with Prisma ORM
+- JWT sessions in HttpOnly cookies; passwords hashed with bcrypt
 
 ## Run locally
 
-Requires Python 3.10 or newer.
+Requires Node.js 20.19+ or 22.12+.
 
 ```powershell
-python app.py
+npm install
+Copy-Item .env.example .env
+npx prisma migrate dev --name init
+npm run dev
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000), create an account, and add products. Data is stored in `stockflow.db` beside the application. To use another database path or port:
+Vite serves the frontend at [http://127.0.0.1:5173](http://127.0.0.1:5173) and proxies API requests to Express on port 3000. Configure `DATABASE_URL`, `JWT_SECRET`, and `PORT` in `.env` as needed. The default SQLite database is `prisma/dev.db`.
+
+## Production
+
+Set `DATABASE_URL` and a random `JWT_SECRET` (at least 32 characters), then run `npm install`, `npm run build`, and `npm start`. The start command applies checked-in Prisma migrations before serving the built frontend and API. The `Procfile` is provided for Node-compatible hosts. SQLite is suitable for a single-instance demo; use PostgreSQL for multi-instance deployments.
+
+## Checks
 
 ```powershell
-$env:STOCKFLOW_DB = "D:\data\stockflow.db"
-$env:PORT = "8080"
-python app.py
+npm test
+npm run build
 ```
 
-## Features
-
-- Email and password signup/sign-in with scrypt password hashing and server-side sessions.
-- Organization creation at signup, with all product and settings queries scoped to the authenticated organization.
-- Product creation, editing, deletion, name/SKU search, and optional cost and selling prices.
-- Dashboard totals for products, units, and low-stock items.
-- Per-product thresholds with an organization-wide default (5 by default).
-- Responsive desktop and mobile layouts, form validation, and confirmation before deletion.
-
-## Run acceptance checks
-
-```powershell
-python -m unittest discover -s tests -v
-node --check app.js
-```
-
-## Deployment notes
-
-The service binds to `127.0.0.1` for local use. The included `Procfile` binds to `0.0.0.0`, uses the platform-provided `PORT`, and enables secure session cookies for HTTPS. For a single-instance host that supports persistent disks, point `STOCKFLOW_DB` at a persistent disk location. SQLite is suitable for a demo or a single app instance; a production multi-instance deployment should use a managed database and a production-grade HTTP server.
-
-The assessment's separate submission instructions also call for emailing the confirmed start time and public GitHub repository link before starting, maintaining regular commits, and sharing a live deployment URL at submission. This workspace has a local Git repository and commit, but it is not connected to GitHub or a hosting account. Publishing and live deployment require access to those accounts. The pre-assessment email step cannot be completed retroactively.
+The test suite exercises authentication, organization isolation, product validation and CRUD, dashboard totals, and threshold settings against a separate SQLite test database.
