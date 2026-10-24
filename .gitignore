@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+stockflow.db
+stockflow.db-shm
+stockflow.db-wal
+.venv/
+venv/
+.env
