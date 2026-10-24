@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: stockflow-inventory-management
+    name: stockflow-inventory-soni24140
     runtime: node
     plan: free
     region: singapore
