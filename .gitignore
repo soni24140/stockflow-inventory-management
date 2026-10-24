@@ -6,3 +6,4 @@ stockflow.db-wal
 .venv/
 venv/
 .env
+*.pdf

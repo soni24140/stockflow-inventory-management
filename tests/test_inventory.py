@@ -161,6 +161,17 @@ class StockFlowAcceptanceTests(unittest.TestCase):
         self.assertEqual(response.status, 400)
         connection.close()
 
+    def test_ui_assets_are_served_and_include_signup_confirmation(self):
+        status, html = self.request(self.owner, "/")
+        self.assertEqual(status, 200)
+        self.assertIn(b'name="confirmPassword"', html)
+        status, script = self.request(self.owner, "/app.js")
+        self.assertEqual(status, 200)
+        self.assertIn(b"Passwords do not match.", script)
+        status, stylesheet = self.request(self.owner, "/styles.css")
+        self.assertEqual(status, 200)
+        self.assertIn(b"@media(max-width:720px)", stylesheet)
+
 
 if __name__ == "__main__":
     unittest.main()
